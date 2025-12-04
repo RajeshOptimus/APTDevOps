@@ -5,9 +5,6 @@ resource "aws_lb" "alb" {
   subnets            = var.public_subnets
   security_groups    = [var.alb_security_group]
   tags               = merge(var.tags, { Name = "${var.name_prefix}-alb" })
-
-  # ensure LB is deleted after ASG when destroying: depends on ASG resource
-  depends_on = [aws_autoscaling_group.asg]
 }
 
 resource "aws_lb_target_group" "tg" {
