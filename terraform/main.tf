@@ -64,13 +64,3 @@ module "asg" {
   key_name          = var.key_name
   tags              = local.common_tags
 }
-
-output "alb_dns" {
-  value       = module.asg.alb_dns
-  description = "ALB DNS name to test the application"
-}
-
-output "asg_name" {
-  value       = module.asg.asg_name
-  description = "ASG name"
-}
