@@ -5,6 +5,9 @@ resource "aws_lb" "alb" {
   subnets            = var.public_subnets
   security_groups    = [var.alb_security_group]
   tags               = merge(var.tags, { Name = "${var.name_prefix}-alb" })
+
+  # ensure LB is deleted after ASG when destroying: depends on ASG resource
+  depends_on = [aws_autoscaling_group.asg]
 }
 
 resource "aws_lb_target_group" "tg" {
@@ -107,7 +110,7 @@ resource "aws_autoscaling_group" "asg" {
     propagate_at_launch = true
   }
   target_group_arns = [aws_lb_target_group.tg.arn]
-  lifecycle {
-    create_before_destroy = true
-  }
+
+  # Allow Terraform to force-delete the ASG and its instances during destroy
+  force_delete = true
 }
